@@ -46,14 +46,13 @@ Link rAppend(Link l1, Link l2) {
 }
 
 // NOTE(brendan): append l1 reversed to l2; side-effects; recursive
+// i.e. returns [reversed l1, l2]
 Link rRevAppend(Link l1, Link l2) {
   if(l1) {
-    if(l1->next) {
-      Link next = l1->next;
-      l1->next = NULL;
-      l2 = rRevAppend(next, l2);
-    }
-    return rAppend(l1, l2);
+    Link temp = l1->next;
+    l1->next = l2;
+    l2 = l1;
+    return rRevAppend(temp, l2);
   }
   else {
     return l2;
