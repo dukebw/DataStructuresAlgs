@@ -60,6 +60,30 @@ Link rRevAppend(Link l1, Link l2) {
   }
 }
 
+// NOTE(brendan): reverse with side-effects; recursive
+Link rReverse(Link l) {
+  return rRevAppend(l, NULL);
+}
+
+// NOTE(brendan): reverse with side-effects; iterative
+Link iReverse(Link l) {
+  if(l) {
+    Link p = l;
+    Link q = l->next;
+    while(q) {
+      Link temp = q->next;
+      q->next = p;
+      p = q;
+      q = temp;
+    }
+    l->next = NULL;
+    return p;
+  }
+  else {
+    return NULL;
+  }
+}
+
 // NOTE(brendan): return formatted string representing list
 char *toString(Link l) {
   char *result = (char *)malloc(sizeof(char) * MAXLINE);
@@ -74,14 +98,9 @@ char *toString(Link l) {
     i += sprintf(result + i, "%d]", l->item);
   }
   else {
-    result[i] = ']';
+    sprintf(result + i, "]");
   }
   return result;
-}
-
-// NOTE(brendan): reverse with side-effects; recursive
-Link rReverse(Link l) {
-  return rRevAppend(l, NULL);
 }
 
 // NOTE(brendan): testing client
@@ -99,4 +118,8 @@ int main(int argc, char **argv) {
 
   l1 = rReverse(l1);
   printf("%s\n", toString(l1));
+  printf("%s\n", toString(rReverse(NULL)));
+  printf("%s\n", toString(rRevAppend(NULL, NULL)));
+  printf("%s\n", toString(iReverse(l1)));
+  printf("%s\n", toString(iReverse(NULL)));
 }
