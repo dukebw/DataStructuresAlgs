@@ -83,6 +83,82 @@ Link iReverse(Link l) {
   }
 }
 
+// NOTE(brendan): inserts n into sorted list l; side-effects; recursive
+Link rInsertNode(Link l, Link n) {
+  if(l) {
+    if(n) {
+      if(l->item < n->item) {
+        l->next = rInsertNode(l->next, n);
+        return l;
+      }
+      else {
+        n->next = l;
+        return n;
+      }
+    }
+    else {
+      return l;
+    }
+  }
+  else if(n) {
+    n->next = NULL;
+    return n;
+  }
+  else {
+    return NULL;
+  }
+}
+
+// NOTE(brendan): insertion-sorts list; side-effects; recursive
+Link rInsertionSort(Link l) {
+  if(l) {
+    return rInsertNode(rInsertionSort(l->next), l);
+  }
+  else {
+    return NULL;
+  }
+}
+
+// NOTE(brendan): inserts n into sorted list l; side-effects; iterative
+Link iInsertNode(Link l, Link n) {
+  if(n) {
+    if(l) {
+      Link p = l;
+      while(p->next) {
+        if(p->next->item > n->item) {
+          break;
+        }
+        else {
+          p = p->next;
+        }
+      }
+      Link temp = p->next;
+      p->next = n;
+      n->next = temp;
+      return l;
+    }
+    else {
+      n->next = NULL;
+      return n;
+    }
+  }
+  else {
+    return l;
+  }
+}
+
+// NOTE(brendan): insertion-sorts list; side-effects; iterative
+// TODO(brendan): get it so the first element of l gets sorted
+Link iInsertionSort(Link l) {
+  Link result = NULL;
+  while(l) {
+    Link temp = l->next;
+    result = iInsertNode(result, l);
+    l = temp;
+  }
+  return result;
+}
+
 // NOTE(brendan): return formatted string representing list
 char *toString(Link l) {
   char *result = (char *)malloc(sizeof(char) * MAXLINE);
@@ -105,7 +181,10 @@ char *toString(Link l) {
 // NOTE(brendan): testing client
 int main(int argc, char **argv) {
   Link l1 = NULL; 
-  Link l2 = NULL;
+  /* Link l2 = NULL; */
+  srand(time(NULL));
+  // NOTE(brendan): reverse tests
+#if 0
   for(int i = 0; i < 10; ++i) {
     l1 = rAppend(l1, i);
   }
@@ -121,4 +200,12 @@ int main(int argc, char **argv) {
   printf("%s\n", toString(rRevAppend(NULL, NULL)));
   printf("%s\n", toString(iReverse(l1)));
   printf("%s\n", toString(iReverse(NULL)));
+#endif
+  // NOTE(brendan): insertion-sort tests
+  for(int i = 0; i < 10000; ++i) {
+    l1 = rAppend(l1, rand() % 100);
+  }
+  printf("%s\n", toString(l1));
+  /* printf("%s\n", toString(rInsertionSort(l1))); */
+  printf("%s\n", toString(iInsertionSort(l1)));
 }
