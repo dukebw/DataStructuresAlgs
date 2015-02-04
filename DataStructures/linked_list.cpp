@@ -124,17 +124,23 @@ Link iInsertNode(Link l, Link n) {
   if(n) {
     if(l) {
       Link p = l;
-      while(p->next) {
-        if(p->next->item > n->item) {
-          break;
-        }
-        else {
-          p = p->next;
-        }
+      if(p->item > n->item) {
+        n->next = p;
+        l = n;
       }
-      Link temp = p->next;
-      p->next = n;
-      n->next = temp;
+      else {
+        while(p->next) {
+          if(p->next->item > n->item) {
+            break;
+          }
+          else {
+            p = p->next;
+          }
+        }
+        Link temp = p->next;
+        p->next = n;
+        n->next = temp;
+      }
       return l;
     }
     else {
